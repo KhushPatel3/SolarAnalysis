@@ -23,68 +23,68 @@
     <!-- Tab Contents -->
     <div class="tab-content active" id="summary">
         <h2>Summary</h2>
-        <div class="summary-cards">
+        <div class="card-grid">
             <div class="card">
                 <h3>Total Import</h3>
-                <p id="total-import">-- kWh</p>
-                <p id="avg-import">-- kWh/day</p>
+                <p id="total-import" class="metric-value">-- kWh</p>
+                <p id="avg-import" class="metric-sub">-- kWh/day</p>
             </div>
             <div class="card">
                 <h3>Total Export</h3>
-                <p id="total-export">-- kWh</p>
-                <p id="avg-export">-- kWh/day</p>
+                <p id="total-export" class="metric-value">-- kWh</p>
+                <p id="avg-export" class="metric-sub">-- kWh/day</p>
             </div>
             <div class="card">
                 <h3>Net Energy</h3>
-                <p id="net-energy">-- kWh</p>
+                <p id="net-energy" class="metric-value">-- kWh</p>
             </div>
         </div>
 
         <div class="key-insights">
             <h3>Key Insights</h3>
             <ul id="insights-list">
-                <!-- Insights will be injected here -->
+                <!-- Insights injected here -->
             </ul>
         </div>
     </div>
 
     <div class="tab-content" id="monthly">
         <h2>Monthly Analysis</h2>
-        <canvas id="monthly-bar-chart"></canvas>
-        <canvas id="monthly-line-chart"></canvas>
+        <div class="chart-wrapper">
+            <canvas id="monthly-bar-chart"></canvas>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="monthly-line-chart"></canvas>
+        </div>
         <h3>Monthly Breakdown</h3>
-        <table id="monthly-table">
-            <thead>
-            <tr>
-                <th>Month</th>
-                <th>Import (kWh)</th>
-                <th>Export (kWh)</th>
-                <th>Net (kWh)</th>
-                <th>Estimated Bill ($)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Monthly rows will be injected here -->
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table id="monthly-table">
+                <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Import (kWh)</th>
+                    <th>Export (kWh)</th>
+                    <th>Net (kWh)</th>
+                    <th>Bill ($)</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
     <div class="tab-content" id="seasonal">
         <h2>Seasonal Analysis</h2>
-        <canvas id="seasonal-bar-chart"></canvas>
-        <div id="seasonal-summary">
-            <!-- Season summaries will be injected here -->
+        <div class="chart-wrapper">
+            <canvas id="seasonal-bar-chart"></canvas>
         </div>
-        <div id="seasonal-pattern-analysis">
-            <!-- Pattern analysis will be injected here -->
-        </div>
+        <div id="seasonal-summary"></div>
+        <div id="seasonal-pattern-analysis"></div>
     </div>
 
     <div class="tab-content" id="recommendation">
         <h2>Recommendations</h2>
-        <div id="recommendation-content">
-            <!-- Recommendations and financial analysis will be injected here -->
-        </div>
+        <div id="recommendation-content"></div>
     </div>
 </div>
 

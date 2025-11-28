@@ -180,3 +180,42 @@ canvas {
         font-size: 1.5rem;
     }
 }
+
+/* --- CARD GRID --- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* --- METRICS --- */
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+}
+
+.metric-sub {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* --- CHART WRAPPER --- */
+.chart-wrapper {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+/* --- TABLE WRAPPER --- */
+.table-wrapper {
+    overflow-x: auto;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
