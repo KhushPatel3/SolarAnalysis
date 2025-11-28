@@ -17,7 +17,7 @@ tabs.forEach(tab => {
 // ---------- GOOGLE SHEETS FETCH ----------
 const SHEET_ID = 'YOUR_SHEET_ID_HERE'; // replace with your sheet ID
 const SHEET_NAME = 'Sheet1'; // replace with your sheet name
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${SHEET_NAME}`;
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/1qXR5qKnv8lC_lyS9pp5DPUO6ce46Twgmt6pQSTq4FDA/gviz/tq?sheet=DATA`;
 
 async function fetchSheetData() {
     const response = await fetch(SHEET_URL);
