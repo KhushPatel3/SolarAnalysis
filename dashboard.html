@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NZ Solar Energy Analysis 2025</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>NZ Solar Energy Analysis 2025</h1>
+    <p class="subtitle">Data Period: January 1 - November 14, 2025 (318 days)</p>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="summary">Summary</button>
+        <button class="tab-btn" data-tab="monthly">Monthly</button>
+        <button class="tab-btn" data-tab="seasonal">Seasonal</button>
+        <button class="tab-btn" data-tab="recommendation">Recommendation</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="tab-content active" id="summary">
+        <h2>Summary</h2>
+        <div class="summary-cards">
+            <div class="card">
+                <h3>Total Import</h3>
+                <p id="total-import">-- kWh</p>
+                <p id="avg-import">-- kWh/day</p>
+            </div>
+            <div class="card">
+                <h3>Total Export</h3>
+                <p id="total-export">-- kWh</p>
+                <p id="avg-export">-- kWh/day</p>
+            </div>
+            <div class="card">
+                <h3>Net Energy</h3>
+                <p id="net-energy">-- kWh</p>
+            </div>
+        </div>
+
+        <div class="key-insights">
+            <h3>Key Insights</h3>
+            <ul id="insights-list">
+                <!-- Insights will be injected here -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="tab-content" id="monthly">
+        <h2>Monthly Analysis</h2>
+        <canvas id="monthly-bar-chart"></canvas>
+        <canvas id="monthly-line-chart"></canvas>
+        <h3>Monthly Breakdown</h3>
+        <table id="monthly-table">
+            <thead>
+            <tr>
+                <th>Month</th>
+                <th>Import (kWh)</th>
+                <th>Export (kWh)</th>
+                <th>Net (kWh)</th>
+                <th>Estimated Bill ($)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Monthly rows will be injected here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-content" id="seasonal">
+        <h2>Seasonal Analysis</h2>
+        <canvas id="seasonal-bar-chart"></canvas>
+        <div id="seasonal-summary">
+            <!-- Season summaries will be injected here -->
+        </div>
+        <div id="seasonal-pattern-analysis">
+            <!-- Pattern analysis will be injected here -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="recommendation">
+        <h2>Recommendations</h2>
+        <div id="recommendation-content">
+            <!-- Recommendations and financial analysis will be injected here -->
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
