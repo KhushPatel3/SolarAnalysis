@@ -6,23 +6,24 @@
     <title>NZ Solar Energy Analysis 2025</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1"></script>
 </head>
 <body>
 <div class="container">
     <h1>NZ Solar Energy Analysis 2025</h1>
-    <p class="subtitle">Data Period: January 1 - November 14, 2025 (318 days)</p>
+    <p class="subtitle" id="data-period">Data Period: --</p>
 
     <!-- Navigation Tabs -->
     <div class="tabs">
         <button class="tab-btn active" data-tab="summary">Summary</button>
-        <button class="tab-btn" data-tab="monthly">Monthly</button>
         <button class="tab-btn" data-tab="seasonal">Seasonal</button>
         <button class="tab-btn" data-tab="recommendation">Recommendation</button>
     </div>
 
-    <!-- Tab Contents -->
+    <!-- Summary Tab Content -->
     <div class="tab-content active" id="summary">
         <h2>Summary</h2>
+
         <div class="card-grid">
             <div class="card">
                 <h3>Total Import</h3>
@@ -42,20 +43,23 @@
 
         <div class="key-insights">
             <h3>Key Insights</h3>
-            <ul id="insights-list">
-                <!-- Insights injected here -->
-            </ul>
+            <ul id="insights-list"></ul>
         </div>
-    </div>
 
-    <div class="tab-content" id="monthly">
-        <h2>Monthly Analysis</h2>
+        <!-- Monthly Analysis Section -->
+        <h3>Monthly Analysis</h3>
         <div class="chart-wrapper">
             <canvas id="monthly-bar-chart"></canvas>
         </div>
         <div class="chart-wrapper">
             <canvas id="monthly-line-chart"></canvas>
         </div>
+
+        <div class="chart-container" style="margin-top: 2rem;">
+            <h3>Monthly Electricity Bills</h3>
+            <canvas id="monthly-bill-chart" width="400" height="200"></canvas>
+        </div>
+        <br/><br/>
         <h3>Monthly Breakdown</h3>
         <div class="table-wrapper">
             <table id="monthly-table">
@@ -73,6 +77,7 @@
         </div>
     </div>
 
+    <!-- Seasonal Tab Content -->
     <div class="tab-content" id="seasonal">
         <h2>Seasonal Analysis</h2>
         <div class="chart-wrapper">
@@ -82,10 +87,12 @@
         <div id="seasonal-pattern-analysis"></div>
     </div>
 
+    <!-- Recommendation Tab Content -->
     <div class="tab-content" id="recommendation">
         <h2>Recommendations</h2>
         <div id="recommendation-content"></div>
     </div>
+
 </div>
 
 <script src="script.js"></script>

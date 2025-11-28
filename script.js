@@ -43,8 +43,7 @@ async function fetchSheetData() {
         let exportTotal = 0;
         let daysCount = 0;
 
-        // Rows 4-34 contain daily import/export
-        for (let r = 3; r < 34; r++) {
+        for (let r = 3; r < 34; r++) { // Rows 4-34 daily import/export
             const imp = rows[r]?.c[m.colStart]?.v;
             const exp = rows[r]?.c[m.colStart + 1]?.v;
             if (imp != null && exp != null) {
@@ -54,9 +53,9 @@ async function fetchSheetData() {
             }
         }
 
-        // Row 36 has electricity bill (may be merged, take first non-null)
+        // Row 36 has electricity bill
         let bill = 0;
-        for (let c = m.colStart; c <= m.colStart + 1; c++) { // adjust +1 if merged spans more
+        for (let c = m.colStart; c <= m.colStart + 1; c++) {
             const val = rows[31]?.c[c]?.v;
             if (val != null) {
                 bill = parseFloat(String(val).replace(/[^0-9.-]+/g,""));
@@ -64,17 +63,36 @@ async function fetchSheetData() {
             }
         }
 
-
         return {
             month: m.name,
             import: importTotal,
             export: exportTotal,
-            net: exportTotal - importTotal, bill,
+            net: exportTotal - importTotal,
+            bill,
             days: daysCount
         };
     });
-    return { monthlyTotals, dailyData: rows };
 
+    // ---------- Determine Latest Date ----------
+    let lastDay = 0;
+    let lastMonthIndex = 0;
+    
+    for (let r = 3; r < 34; r++) {
+        for (let m = 0; m < months.length; m++) {
+            const c = months[m].colStart;
+            const imp = rows[r]?.c[c]?.v;
+            const exp = rows[r]?.c[c+1]?.v;
+            if ((imp != null && imp !== "") || (exp != null && exp !== "")) {
+                lastDay = r - 2; // row 3 = day 1
+                lastMonthIndex = m;
+            }
+        }
+    }
+    
+    const latestDate = `${lastDay} ${months[lastMonthIndex].name} 2025`;
+    document.getElementById('data-period').textContent = `Data Period: January 1 - ${latestDate} (${lastDay} days)`;
+
+    return { monthlyTotals, dailyData: rows };
 }
 
 // ---------- SEASON DEFINITIONS ----------
@@ -85,14 +103,15 @@ const SEASONS = {
     'Spring': ['September','October','November']
 };
 
+// ---------- SEASON BOUNDARIES ----------
+const SEASON_BOUNDARIES = [2.5, 5.5, 8.5]; // indices between months (Feb-Mar, May-Jun, Aug-Sep)
+
 // ---------- RENDER FUNCTIONS ----------
 function renderSummary(monthlyTotals) {
     const totalImport = monthlyTotals.reduce((sum,m)=>sum+m.import,0);
     const totalExport = monthlyTotals.reduce((sum,m)=>sum+m.export,0);
     const totalDays = monthlyTotals.reduce((sum,m)=>sum+m.days,0);
     const netEnergy = totalExport - totalImport;
-    const billData = monthlyTotals.map(m => m.bill);
-
 
     document.getElementById('total-import').textContent = `${totalImport.toFixed(1)} kWh`;
     document.getElementById('avg-import').textContent = `Avg: ${(totalImport/totalDays).toFixed(1)} kWh/day`;
@@ -114,36 +133,8 @@ function renderSummary(monthlyTotals) {
         li.textContent = i;
         insightsList.appendChild(li);
     });
-}
 
-// ---------- MONTHLY TAB ----------
-function renderMonthly(monthlyTotals) {
-    const labels = monthlyTotals.map(m => m.month.substring(0,3));
-    const importData = monthlyTotals.map(m => m.import);
-    const exportData = monthlyTotals.map(m => m.export);
-    const netData = monthlyTotals.map(m => m.net);
-
-    // Bar chart
-    new Chart(document.getElementById('monthly-bar-chart'), {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                { label: 'Import', data: importData, backgroundColor: '#ef4444' },
-                { label: 'Export', data: exportData, backgroundColor: '#22c55e' }
-            ]
-        },
-        options: { responsive:true }
-    });
-
-    // Line chart
-    new Chart(document.getElementById('monthly-line-chart'), {
-        type: 'line',
-        data: { labels, datasets: [{ label: 'Net Energy', data: netData, borderColor: '#3b82f6', fill:false }] },
-        options: { responsive:true }
-    });
-
-    // Table
+    // ---------- Monthly Breakdown Table ----------
     const tbody = document.querySelector('#monthly-table tbody');
     tbody.innerHTML = '';
     monthlyTotals.forEach(m => {
@@ -157,9 +148,87 @@ function renderMonthly(monthlyTotals) {
         `;
         tbody.appendChild(row);
     });
+
+    const labels = monthlyTotals.map(m => m.month.substring(0,3));
+    const importData = monthlyTotals.map(m => m.import);
+    const exportData = monthlyTotals.map(m => m.export);
+    const netData = monthlyTotals.map(m => m.net);
+
+    // ---------- Monthly Import/Export Bar Chart ----------
+    new Chart(document.getElementById('monthly-bar-chart'), {
+        type: 'bar',
+        data: { labels, datasets: [
+            { label: 'Import', data: importData, backgroundColor: '#ef4444' },
+            { label: 'Export', data: exportData, backgroundColor: '#22c55e' }
+        ]},
+        options: {
+            responsive:true,
+            plugins: {
+                annotation: {
+                    annotations: SEASON_BOUNDARIES.map(pos => ({
+                        type: 'line',
+                        xMin: pos,
+                        xMax: pos,
+                        borderColor: '#00000055',
+                        borderWidth: 1,
+                        borderDash: [5,5]
+                    }))
+                }
+            }
+        }
+    });
+
+    // ---------- Monthly Net Energy Line Chart ----------
+    new Chart(document.getElementById('monthly-line-chart'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Net Energy', data: netData, borderColor: '#3b82f6', fill:false }] },
+        options: {
+            responsive:true,
+            plugins: {
+                annotation: {
+                    annotations: SEASON_BOUNDARIES.map(pos => ({
+                        type: 'line',
+                        xMin: pos,
+                        xMax: pos,
+                        borderColor: '#00000055',
+                        borderWidth: 1,
+                        borderDash: [5,5]
+                    }))
+                }
+            }
+        }
+    });
+
+    // ---------- Monthly Electricity Bills Chart ----------
+    new Chart(document.getElementById('monthly-bill-chart'), {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Electricity Bill ($)',
+                data: monthlyTotals.map(m => m.bill),
+                backgroundColor: monthlyTotals.map(m => m.bill < 0 ? '#16a34a' : '#dc2626')
+            }]
+        },
+        options: {
+            responsive:true,
+            plugins: {
+                legend: { display: false },
+                annotation: {
+                    annotations: SEASON_BOUNDARIES.map(pos => ({
+                        type: 'line',
+                        xMin: pos,
+                        xMax: pos,
+                        borderColor: '#00000055',
+                        borderWidth: 1,
+                        borderDash: [5,5]
+                    }))
+                }
+            },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
 }
-
-
 
 function renderSeasonal(monthlyTotals) {
     const seasonData = [];
@@ -174,7 +243,10 @@ function renderSeasonal(monthlyTotals) {
 
     new Chart(document.getElementById('seasonal-bar-chart'), {
         type:'bar',
-        data: { labels: seasonData.map(s=>s.season), datasets:[{label:'Import', data:seasonData.map(s=>s.import), backgroundColor:'#ef4444'}, {label:'Export', data:seasonData.map(s=>s.export), backgroundColor:'#22c55e'}] },
+        data: { labels: seasonData.map(s=>s.season), datasets:[
+            {label:'Import', data:seasonData.map(s=>s.import), backgroundColor:'#ef4444'},
+            {label:'Export', data:seasonData.map(s=>s.export), backgroundColor:'#22c55e'}
+        ] },
         options:{responsive:true}
     });
 
@@ -227,9 +299,8 @@ function renderRecommendation(monthlyTotals) {
 
 // ---------- INIT ----------
 async function init() {
-    const { monthlyTotals, dailyData } = await fetchSheetData();
+    const { monthlyTotals } = await fetchSheetData();
     renderSummary(monthlyTotals);
-    renderMonthly(monthlyTotals, dailyData);
     renderSeasonal(monthlyTotals);
     renderRecommendation(monthlyTotals);
 }
