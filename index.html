@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NZ Solar Energy Analysis 2025</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="header-content">
+            <h1>🌞 Solar Dashboard</h1>
+            <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode">
+                <span class="icon-light">☀️</span>
+                <span class="icon-dark">🌙</span>
+            </button>
+        </div>
+        <p class="subtitle" id="data-period">Data Period: --</p>
+    </header>
+
+    <!-- Desktop Navigation Tabs -->
+    <div class="tabs desktop-tabs">
+        <button class="tab-btn active" data-tab="summary">
+            <span class="tab-icon">📊</span>
+            <span>Summary</span>
+        </button>
+        <button class="tab-btn" data-tab="daily">
+            <span class="tab-icon">📅</span>
+            <span>Daily</span>
+        </button>
+        <button class="tab-btn" data-tab="seasonal">
+            <span class="tab-icon">🍂</span>
+            <span>Seasonal</span>
+        </button>
+        <button class="tab-btn" data-tab="recommendation">
+            <span class="tab-icon">💡</span>
+            <span>Insights</span>
+        </button>
+    </div>
+
+    <!-- Summary Tab -->
+    <div class="tab-content active" id="summary">
+        <h2>Summary Overview</h2>
+
+        <div class="card-grid">
+            <div class="card gradient-red">
+                <div class="card-icon">⚡</div>
+                <h3>Total Import</h3>
+                <p id="total-import" class="metric-value">-- kWh</p>
+                <p id="avg-import" class="metric-sub">-- kWh/day</p>
+            </div>
+            <div class="card gradient-green">
+                <div class="card-icon">☀️</div>
+                <h3>Total Export</h3>
+                <p id="total-export" class="metric-value">-- kWh</p>
+                <p id="avg-export" class="metric-sub">-- kWh/day</p>
+            </div>
+            <div class="card gradient-blue">
+                <div class="card-icon">⚖️</div>
+                <h3>Net Energy</h3>
+                <p id="net-energy" class="metric-value">-- kWh</p>
+            </div>
+            <div class="card gradient-purple">
+                <div class="card-icon">🎯</div>
+                <h3>Self-Sufficiency</h3>
+                <p id="self-sufficiency" class="metric-value">--%</p>
+                <p class="metric-sub">Energy independence</p>
+            </div>
+        </div>
+
+        <div class="key-insights">
+            <h3>📈 Key Insights</h3>
+            <ul id="insights-list"></ul>
+        </div>
+
+        <!-- Monthly Analysis Section -->
+        <div class="chart-wrapper">
+            <h3>Monthly Energy Flow</h3>
+            <canvas id="monthly-bar-chart"></canvas>
+        </div>
+
+        <div class="chart-wrapper">
+            <h3>Monthly Net Energy</h3>
+            <canvas id="monthly-line-chart"></canvas>
+        </div>
+
+        <div class="chart-wrapper">
+            <h3>Monthly Electricity Bills</h3>
+            <canvas id="monthly-bill-chart"></canvas>
+        </div>
+
+
+        <div class="table-wrapper">
+            <h3>Monthly Breakdown</h3>
+            <table id="monthly-table">
+                <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Import (kWh)</th>
+                    <th>Export (kWh)</th>
+                    <th>Net (kWh)</th>
+                    <th>Self-Suff. %</th>
+                    <th>Bill ($)</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Daily Tab -->
+    <div class="tab-content" id="daily">
+        <h2>Daily Analysis</h2>
+
+        <div class="month-selector">
+            <label for="month-select">Select Month:</label>
+            <select id="month-select" class="month-dropdown">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+            </select>
+        </div>
+
+        <div class="card-grid" id="daily-stats">
+            <div class="card">
+                <h3>Days Recorded</h3>
+                <p id="days-recorded" class="metric-value">--</p>
+            </div>
+            <div class="card">
+                <h3>Avg Daily Import</h3>
+                <p id="daily-avg-import" class="metric-value">-- kWh</p>
+            </div>
+            <div class="card">
+                <h3>Avg Daily Export</h3>
+                <p id="daily-avg-export" class="metric-value">-- kWh</p>
+            </div>
+            <div class="card">
+                <h3>Best Day</h3>
+                <p id="best-day" class="metric-value">--</p>
+            </div>
+        </div>
+
+        <div class="chart-wrapper">
+            <h3>Daily Energy Pattern</h3>
+            <canvas id="daily-chart"></canvas>
+        </div>
+    </div>
+
+    <!-- Seasonal Tab -->
+    <div class="tab-content" id="seasonal">
+        <h2>Seasonal Analysis</h2>
+        <div class="chart-wrapper">
+            <canvas id="seasonal-bar-chart"></canvas>
+        </div>
+        <div id="seasonal-summary"></div>
+        <div id="seasonal-pattern-analysis"></div>
+    </div>
+
+    <!-- Recommendations Tab -->
+    <div class="tab-content" id="recommendation">
+        <h2>💡 Personalized Insights & Recommendations</h2>
+        <div id="recommendation-content">
+            <div class="card">
+                <h3>Loading recommendations...</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <button class="mobile-tab-btn active" data-tab="summary">
+            <span class="mobile-icon">📊</span>
+            <span class="mobile-label">Summary</span>
+        </button>
+        <button class="mobile-tab-btn" data-tab="daily">
+            <span class="mobile-icon">📅</span>
+            <span class="mobile-label">Daily</span>
+        </button>
+        <button class="mobile-tab-btn" data-tab="seasonal">
+            <span class="mobile-icon">🍂</span>
+            <span class="mobile-label">Seasonal</span>
+        </button>
+        <button class="mobile-tab-btn" data-tab="recommendation">
+            <span class="mobile-icon">💡</span>
+            <span class="mobile-label">Insights</span>
+        </button>
+    </nav>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
