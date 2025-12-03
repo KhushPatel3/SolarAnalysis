@@ -209,6 +209,24 @@ function renderSummary(monthlyTotals) {
     tbody.appendChild(tr);
   });
 
+  // NEW: Monthly Table Footer (Total Row)
+  let tfoot = table.querySelector('tfoot');
+  if (!tfoot) {
+    tfoot = document.createElement('tfoot');
+    table.appendChild(tfoot);
+  }
+  
+  tfoot.innerHTML = `
+    <tr>
+      <td>TOTAL</td>
+      <td>${totalImport.toFixed(1)}</td>
+      <td>${totalExport.toFixed(1)}</td>
+      <td style="color:${netEnergy > 0 ? '#16a34a' : '#dc2626'}">${netEnergy.toFixed(1)}</td>
+      <td>${overallSelfSufficiency.toFixed(1)}%</td>
+      <td style="color:${totalBill < 0 ? '#16a34a' : '#dc2626'}">${totalBill.toFixed(2)}</td>
+    </tr>
+  `;
+
   const labels = monthlyTotals.map(m => m.month.slice(0,3));
   const importData = monthlyTotals.map(m => m.import);
   const exportData = monthlyTotals.map(m => m.export);
