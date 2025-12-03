@@ -1,6 +1,9 @@
-// ---------- DARK MODE ----------
+// ---------- DARK MODE & RELOAD BUTTON SETUP ----------
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const htmlElement = document.documentElement;
+
+// 1. NEW: Constant for the reload button
+const reloadButton = document.getElementById('reload-data-button'); 
 
 // Load saved theme
 const savedTheme = localStorage.getItem('theme') || 'light';
@@ -90,12 +93,15 @@ async function fetchSheetData() {
     let exportTotal = 0;
     let daysCount = 0;
 
-    for (let r = 3; r < 34; r++) {
+    // Loop runs 0 to 30 (31 iterations) to ensure Day 31 is covered.
+    for (let r = 0; r < 31; r++) {
       const imp = rows[r]?.c[m.colStart]?.v;
       const exp = rows[r]?.c[m.colStart + 1]?.v;
-      if (imp != null && exp != null) {
-        importTotal += parseFloat(imp);
-        exportTotal += parseFloat(exp);
+      
+      // Using loose check (||) to match Daily logic, ensuring we catch partial data if it exists
+      if ((imp != null && imp !== "") || (exp != null && exp !== "")) {
+        importTotal += (imp != null && imp !== "") ? parseFloat(imp) : 0;
+        exportTotal += (exp != null && exp !== "") ? parseFloat(exp) : 0;
         daysCount++;
       }
     }
@@ -123,12 +129,12 @@ async function fetchSheetData() {
   let lastDay = -1;
   for (let m = 0; m < months.length; m++) {
     const c = months[m].colStart;
-    for (let r = 3; r < 34; r++) {
+    for (let r = 0; r < 31; r++) {
       const imp = rows[r]?.c[c]?.v;
       const exp = rows[r]?.c[c+1]?.v;
       if ((imp != null && imp !== "") || (exp != null && exp !== "")) {
         lastMonthIndex = m;
-        lastDay = r - 2;
+        lastDay = r + 1;
       }
     }
   }
@@ -163,6 +169,7 @@ function createSeasonAnnotations() {
 function renderSummary(monthlyTotals) {
   const totalImport = monthlyTotals.reduce((s,m) => s + m.import, 0);
   const totalExport = monthlyTotals.reduce((s,m) => s + m.export, 0);
+  const totalBill = monthlyTotals.reduce((s,m) => s + m.bill, 0); // NEW: Calculate total bill
   const totalDays = monthlyTotals.reduce((s,m) => s + m.days, 0) || 1;
   const netEnergy = totalExport - totalImport;
 
@@ -193,8 +200,9 @@ function renderSummary(monthlyTotals) {
     ul.appendChild(li);
   });
 
-  // Monthly table
-  const tbody = document.querySelector('#monthly-table tbody');
+  // Monthly table Body
+  const table = document.getElementById('monthly-table');
+  const tbody = table.querySelector('tbody');
   tbody.innerHTML = '';
   monthlyTotals.forEach(m => {
     const tr = document.createElement('tr');
@@ -202,7 +210,7 @@ function renderSummary(monthlyTotals) {
       <td>${m.month}</td>
       <td>${m.import.toFixed(1)}</td>
       <td>${m.export.toFixed(1)}</td>
-      <td style="color:${m.bill < 0 ? '#16a34a' : '#dc2626'}">${m.net.toFixed(1)}</td>
+      <td style="color:${m.net > 0 ? '#16a34a' : '#dc2626'}">${m.net.toFixed(1)}</td>
       <td>${m.selfSufficiency.toFixed(1)}%</td>
       <td style="color:${m.bill < 0 ? '#16a34a' : '#dc2626'}"><strong>${m.bill.toFixed(2)}</strong></td>
     `;
@@ -349,21 +357,22 @@ function renderDaily(dailyData, months) {
     const dailyExport = [];
     const days = [];
 
+    // Consistent loop with data fetching (0 to 30)
     for (let r = 0; r < 31; r++) {
       const imp = dailyData[r]?.c[month.colStart]?.v;
       const exp = dailyData[r]?.c[month.colStart + 1]?.v;
 
       // Include day if either import or export has data (not null and not empty string)
       if ((imp != null && imp !== "") || (exp != null && exp !== "")) {
-        days.push(r + 1);
+        days.push(r + 1); // r=0 is Day 1
         dailyImport.push(imp != null && imp !== "" ? parseFloat(imp) : 0);
         dailyExport.push(exp != null && exp !== "" ? parseFloat(exp) : 0);
       }
     }
 
     const daysCount = days.length;
-    const avgImport = dailyImport.reduce((a,b) => a+b, 0) / daysCount || 0;
-    const avgExport = dailyExport.reduce((a,b) => a+b, 0) / daysCount || 0;
+    const avgImport = daysCount > 0 ? dailyImport.reduce((a,b) => a+b, 0) / daysCount : 0;
+    const avgExport = daysCount > 0 ? dailyExport.reduce((a,b) => a+b, 0) / daysCount : 0;
     const bestDayIndex = dailyExport.indexOf(Math.max(...dailyExport));
     const bestDay = bestDayIndex >= 0 ? `Day ${days[bestDayIndex]}` : 'N/A';
 
