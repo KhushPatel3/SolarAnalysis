@@ -573,3 +573,14 @@ tbody tr:hover {
         border: 1px solid #ddd;
     }
 }
+
+/* -------- TABLE FOOTER -------- */
+tfoot {
+    font-weight: 700;
+    background-color: var(--bg-primary);
+}
+
+tfoot td {
+    border-top: 2px solid var(--border-color);
+    padding: 1rem 0.75rem; /* Slightly taller for emphasis */
+}
