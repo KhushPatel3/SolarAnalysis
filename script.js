@@ -65,7 +65,7 @@ let globalDailyData = [];
 // ---------- SHEET FETCH ----------
 async function fetchSheetData() {
   const SHEET_ID = "1qXR5qKnv8lC_lyS9pp5DPUO6ce46Twgmt6pQSTq4FDA";
-  const SHEET_NAME = "Data";
+  const SHEET_NAME = "2025";
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${SHEET_NAME}`;
 
   const response = await fetch(SHEET_URL);
