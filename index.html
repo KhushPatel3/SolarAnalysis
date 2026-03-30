@@ -14,38 +14,25 @@
     <header>
         <div class="header-content">
             <h1>🌞 Solar Dashboard</h1>
-            <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode">
-                <span class="icon-light">☀️</span>
-                <span class="icon-dark">🌙</span>
-            </button>
+            <div class="year-switcher" data-active="1"> 
+                <button class="year-btn" data-year="2025">2025</button> 
+                <button class="year-btn active" data-year="2026">2026</button> 
+            </div>
         </div>
         <p class="subtitle" id="data-period">Data Period: --</p>
     </header>
 
     <!-- Desktop Navigation Tabs -->
     <div class="tabs desktop-tabs">
-        <button class="tab-btn active" data-tab="summary">
-            <span class="tab-icon">📊</span>
-            <span>Summary</span>
-        </button>
-        <button class="tab-btn" data-tab="daily">
-            <span class="tab-icon">📅</span>
-            <span>Daily</span>
-        </button>
-        <button class="tab-btn" data-tab="seasonal">
-            <span class="tab-icon">🍂</span>
-            <span>Seasonal</span>
-        </button>
-        <button class="tab-btn" data-tab="recommendation">
-            <span class="tab-icon">💡</span>
-            <span>Insights</span>
-        </button>
+        <button class="tab-btn active" data-tab="summary"><span class="tab-icon">📊</span><span>Summary</span></button>
+        <button class="tab-btn" data-tab="daily"><span class="tab-icon">📅</span><span>Daily</span></button>
+        <button class="tab-btn" data-tab="seasonal"><span class="tab-icon">🍂</span><span>Seasonal</span></button>
+        <button class="tab-btn" data-tab="recommendation"><span class="tab-icon">💡</span><span>Insights</span></button>
     </div>
 
     <!-- Summary Tab -->
     <div class="tab-content active" id="summary">
         <h2>Summary Overview</h2>
-
         <div class="card-grid">
             <div class="card gradient-red">
                 <div class="card-icon">⚡</div>
@@ -77,36 +64,17 @@
             <ul id="insights-list"></ul>
         </div>
 
-        <!-- Monthly Analysis Section -->
-        <div class="chart-wrapper">
-            <h3>Monthly Energy Flow</h3>
-            <canvas id="monthly-bar-chart"></canvas>
-        </div>
-
-        <div class="chart-wrapper">
-            <h3>Monthly Net Energy</h3>
-            <canvas id="monthly-line-chart"></canvas>
-        </div>
-
-        <div class="chart-wrapper">
-            <h3>Monthly Electricity Bills</h3>
-            <canvas id="monthly-bill-chart"></canvas>
-        </div>
-
+        <div class="chart-wrapper"><h3>Monthly Energy Flow</h3><canvas id="monthly-bar-chart"></canvas></div>
+        <div class="chart-wrapper"><h3>Monthly Net Energy</h3><canvas id="monthly-line-chart"></canvas></div>
+        <div class="chart-wrapper"><h3>Monthly Electricity Bills</h3><canvas id="monthly-bill-chart"></canvas></div>
 
         <div class="table-wrapper">
             <h3>Monthly Breakdown</h3>
             <table id="monthly-table">
-                <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Import (kWh)</th>
-                    <th>Export (kWh)</th>
-                    <th>Net (kWh)</th>
-                    <th>Self-Suff. %</th>
-                    <th>Bill ($)</th>
-                </tr>
-                </thead>
+                <thead><tr>
+                    <th>Month</th><th>Import (kWh)</th><th>Export (kWh)</th>
+                    <th>Net (kWh)</th><th>Self-Suff. %</th><th>Bill ($)</th>
+                </tr></thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -134,27 +102,47 @@
             </select>
         </div>
 
+        <!-- Solar stat cards -->
         <div class="card-grid" id="daily-stats">
-            <div class="card">
-                <h3>Days Recorded</h3>
-                <p id="days-recorded" class="metric-value">--</p>
+            <div class="card"><h3>Days Recorded</h3><p id="days-recorded" class="metric-value">--</p></div>
+            <div class="card"><h3>Avg Daily Import</h3><p id="daily-avg-import" class="metric-value">-- kWh</p></div>
+            <div class="card"><h3>Avg Daily Export</h3><p id="daily-avg-export" class="metric-value">-- kWh</p></div>
+            <div class="card"><h3>Best Day</h3><p id="best-day" class="metric-value">--</p></div>
+        </div>
+
+        <!-- Weather stat cards (hidden when no data) -->
+        <div id="weather-stats-section">
+            <h3 class="weather-section-title">🌤 Weather — Hornby, Christchurch</h3>
+            <div class="card-grid weather-card-grid">
+                <div class="card gradient-sunshine">
+                    <div class="card-icon">🌅</div>
+                    <h3>Avg Sunshine</h3>
+                    <p id="avg-sunshine" class="metric-value">-- hrs</p>
+                    <p class="metric-sub">per day</p>
+                </div>
+                <div class="card gradient-cloud">
+                    <div class="card-icon">☁️</div>
+                    <h3>Avg Cloud Cover</h3>
+                    <p id="avg-cloud" class="metric-value">--%</p>
+                    <p class="metric-sub">mean for month</p>
+                </div>
+                <div class="card gradient-rain">
+                    <div class="card-icon">🌧️</div>
+                    <h3>Total Rainfall</h3>
+                    <p id="total-rain" class="metric-value">-- mm</p>
+                    <p class="metric-sub">for month</p>
+                </div>
             </div>
-            <div class="card">
-                <h3>Avg Daily Import</h3>
-                <p id="daily-avg-import" class="metric-value">-- kWh</p>
-            </div>
-            <div class="card">
-                <h3>Avg Daily Export</h3>
-                <p id="daily-avg-export" class="metric-value">-- kWh</p>
-            </div>
-            <div class="card">
-                <h3>Best Day</h3>
-                <p id="best-day" class="metric-value">--</p>
+
+            <!-- Correlation card -->
+            <div class="card weather-correlation-card">
+                <h3>📊 Weather vs Solar Correlation</h3>
+                <div id="weather-correlation" class="weather-corr-body"></div>
             </div>
         </div>
 
         <div class="chart-wrapper">
-            <h3>Daily Energy Pattern</h3>
+            <h3>Daily Energy Pattern <span class="chart-legend-note">— dashed line: solar radiation (right axis)</span></h3>
             <canvas id="daily-chart"></canvas>
         </div>
     </div>
@@ -162,44 +150,30 @@
     <!-- Seasonal Tab -->
     <div class="tab-content" id="seasonal">
         <h2>Seasonal Analysis</h2>
-        <div class="chart-wrapper">
-            <canvas id="seasonal-bar-chart"></canvas>
-        </div>
+        <div class="chart-wrapper"><canvas id="seasonal-bar-chart"></canvas></div>
         <div id="seasonal-summary"></div>
         <div id="seasonal-pattern-analysis"></div>
     </div>
 
     <!-- Recommendations Tab -->
     <div class="tab-content" id="recommendation">
-        <h2>💡 Personalized Insights & Recommendations</h2>
+        <h2>💡 Personalised Insights & Recommendations</h2>
         <div id="recommendation-content">
-            <div class="card">
-                <h3>Loading recommendations...</h3>
-            </div>
+            <div class="card"><h3>Loading recommendations...</h3></div>
         </div>
     </div>
 
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav">
-        <button class="mobile-tab-btn active" data-tab="summary">
-            <span class="mobile-icon">📊</span>
-            <span class="mobile-label">Summary</span>
-        </button>
-        <button class="mobile-tab-btn" data-tab="daily">
-            <span class="mobile-icon">📅</span>
-            <span class="mobile-label">Daily</span>
-        </button>
-        <button class="mobile-tab-btn" data-tab="seasonal">
-            <span class="mobile-icon">🍂</span>
-            <span class="mobile-label">Seasonal</span>
-        </button>
-        <button class="mobile-tab-btn" data-tab="recommendation">
-            <span class="mobile-icon">💡</span>
-            <span class="mobile-label">Insights</span>
-        </button>
+        <button class="mobile-tab-btn active" data-tab="summary"><span class="mobile-icon">📊</span><span class="mobile-label">Summary</span></button>
+        <button class="mobile-tab-btn" data-tab="daily"><span class="mobile-icon">📅</span><span class="mobile-label">Daily</span></button>
+        <button class="mobile-tab-btn" data-tab="seasonal"><span class="mobile-icon">🍂</span><span class="mobile-label">Seasonal</span></button>
+        <button class="mobile-tab-btn" data-tab="recommendation"><span class="mobile-icon">💡</span><span class="mobile-label">Insights</span></button>
     </nav>
 </div>
 
+<script src="weatherData.js"></script>
+<script src="sheetData.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
