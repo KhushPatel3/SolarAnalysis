@@ -95,3 +95,57 @@ function getWeatherForMonth(weatherYearData, monthIndex, year) {
 
   return result.days.length > 0 ? result : null;
 }
+
+/**
+ * Fetches a 7-day solar export prediction for an East-West split.
+ * @param {number} systemSizeKw - Your total system size (e.g., 6.0)
+ * @returns {Promise<Array>} 7 days of predicted export values
+ */
+async function fetchSolarForecast(systemSizeKw = 6.0) {
+  const lat = -43.54;
+  const lon = 172.52;
+  const tilt = 30;
+
+  // Combining GTI (Solar) + Weather data in one API call
+  const urlEast = `https://api.open-meteo.com/v1/forecast?latitude=-43.54&longitude=172.52&hourly=global_tilted_irradiance,temperature_2m,cloud_cover,precipitation&tilt=${tilt}&azimuth=-90&forecast_days=7&timezone=Pacific%2FAuckland`;
+  const urlWest = `https://api.open-meteo.com/v1/forecast?latitude=-43.54&longitude=172.52&hourly=global_tilted_irradiance&tilt=${tilt}&azimuth=90&forecast_days=7&timezone=Pacific%2FAuckland`;
+
+  try {
+    const [resEast, resWest] = await Promise.all([fetch(urlEast), fetch(urlWest)]);
+    const east = await resEast.json();
+    const west = await resWest.json();
+
+    const dailyPredictions = [];
+    for (let d = 0; d < 7; d++) {
+      let totalKwhDay = 0;
+      let tempMax = -99;
+      let cloudSum = 0;
+      let rainSum = 0;
+      let dayDate = "";
+
+      for (let h = 0; h < 24; h++) {
+        const i = (d * 24) + h;
+        dayDate = east.hourly.time[i].split('T')[0];
+
+        const avgGti = (east.hourly.global_tilted_irradiance[i] + west.hourly.global_tilted_irradiance[i]) / 2;
+        totalKwhDay += (avgGti / 1000) * systemSizeKw * 0.85;
+
+        if (east.hourly.temperature_2m[i] > tempMax) tempMax = east.hourly.temperature_2m[i];
+        cloudSum += east.hourly.cloud_cover[i];
+        rainSum += east.hourly.precipitation[i];
+      }
+
+      dailyPredictions.push({
+        date: dayDate,
+        predictedExport: +totalKwhDay.toFixed(1),
+        temp: Math.round(tempMax),
+        cloud: Math.round(cloudSum / 24),
+        rain: +rainSum.toFixed(1)
+      });
+    }
+    return dailyPredictions;
+  } catch (err) {
+    console.error("Forecast fetch error:", err);
+    return null;
+  }
+}

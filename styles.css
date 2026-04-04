@@ -90,7 +90,6 @@ h1 {
     font-size: 0.95rem;
 }
 
-
 /* -------- TABS (DESKTOP) -------- */
 .tabs {
     display: flex;
@@ -105,7 +104,7 @@ h1 {
     background: var(--bg-secondary);
     border-radius: 12px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 0.95rem;
     color: var(--text-primary);
     box-shadow: var(--shadow-sm);
@@ -685,5 +684,281 @@ tfoot td {
 .chart-legend-note {
     font-size: 0.8rem;
     font-weight: 400;
+    color: var(--text-secondary);
+}
+/* -------- SEASONAL CARDS -------- */
+#seasonal-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.season-card {
+    padding: 1.25rem;
+}
+
+.season-card-header {
+    padding-left: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.season-card-header h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.season-months {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.season-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.season-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.season-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.season-stat-val {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.season-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-left: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.season-badge.best { background: #d1fae5; color: #065f46; }
+.season-badge.worst { background: #fee2e2; color: #991b1b; }
+
+[data-theme="dark"] .season-badge.best { background: #065f46; color: #a7f3d0; }
+[data-theme="dark"] .season-badge.worst { background: #7f1d1d; color: #fecaca; }
+
+/* -------- PATTERN GRID (Insights & Recommendations) -------- */
+.pattern-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.pattern-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+.pattern-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+}
+
+/* -------- DAILY STATS — 5-card wrap -------- */
+#daily-stats {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+/* -------- FORECAST -------- */
+.forecast-info-banner {
+  margin-bottom: 1.5rem;
+}
+
+.forecast-summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  align-items: center;
+}
+
+.forecast-cards {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+  .forecast-cards { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .forecast-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+.forecast-day-card {
+  text-align: center;
+  padding: 1rem 0.75rem;
+  margin-bottom: 0;
+}
+
+.forecast-date {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.forecast-condition {
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+}
+
+.forecast-export {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.forecast-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.forecast-disclaimer {
+  font-size: 0.88rem;
+  background: var(--bg-primary) !important;
+  color: var(--text-secondary);
+}
+
+/* -------- COMPARISON TAB -------- */
+.compare-info-banner {
+  background: var(--gradient-blue);
+  border: none;
+  margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .compare-info-banner {
+  background: var(--gradient-blue);
+  color: white;
+}
+
+/* -------- MOBILE NAV — 6 TABS (scrollable) -------- */
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    justify-content: flex-start;
+  }
+
+  .mobile-bottom-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-tab-btn {
+    flex: 0 0 auto;
+    min-width: 62px;
+    padding: 0.5rem 0.4rem;
+  }
+
+  .mobile-label {
+    font-size: 0.65rem;
+  }
+
+  .mobile-icon {
+    font-size: 1.3rem;
+  }
+}
+
+/* -------- BILL ESTIMATOR -------- */
+.bill-estimator-card {
+    border-left: 5px solid var(--accent-purple);
+}
+
+.bill-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.bill-item {
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.bill-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.bill-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.bill-total-row {
+    grid-column: span 2;
+    padding: 1rem;
+    background: var(--gradient-purple);
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.bill-total-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+/* -------- FORECAST GRID -------- */
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0.75rem;
+}
+
+.forecast-card {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.forecast-mini-details {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.7rem;
     color: var(--text-secondary);
 }
